@@ -1,0 +1,51 @@
+﻿@model WebApplication1.Models.Login
+@{
+    ViewData["Title"] = "Auth";
+}
+
+<h1>Auth</h1>
+<form method="post" asp-controller="Auth">
+    <table class="table">
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.UserName)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Password)
+                </td>
+                <td>
+                    @Html.PasswordFor(model => model.Password)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="button" value="Login" onclick="login();"/></td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+<script>
+    function login() {
+        $.ajax({
+          method: "POST",
+          url: "/Auth",
+          data: { UserName: $("#UserName").val(), Password: $("#Password").val() }
+        })
+            .done(function (msg) {
+                alert("Your Token is: " + msg.token);
+
+                // prepare and save a cookie
+                var cookie_for_token = "Token=" + msg.token + "; expires=" + msg.expires + "; path=/";
+                document.cookie = cookie_for_token;
+                document.location="/Products"
+          });
+    }
+
+
+</script>

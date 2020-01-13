@@ -1,0 +1,90 @@
+﻿@model IEnumerable<WebApplication1.Models.Purchase>
+
+@{
+    ViewData["Title"] = "Your Orders";
+}
+
+    <h1>Your Orders</h1>
+
+<p>
+    
+</p>
+<div class="row">
+    <div class="col-sm-6"><a asp-action="Create">Create New Order</a></div>
+    <div class="col-sm-6 pull-right">
+        <a asp-action="Index" asp-route-includeall="@ViewData["includeCancelledOrders"]">Include Cancelled Orders:</a> 
+        @if (@ViewData["includeCancelledOrders"] is null || @ViewData["includeCancelledOrders"].ToString() == "false")
+        {
+            @Html.Raw("NO")
+        }
+        else
+        {
+            @Html.Raw("YES")
+        }
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                Total
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </th>
+            <th>
+                @if (ViewData["includeCancelledOrders"].ToString() == "true")
+                {
+                    @Html.DisplayNameFor(model => model.CancelDate);
+                }
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.Raw((item.Quantity * item.Product.Price).ToString("C2"))
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderDate)
+            </td>
+            <td>
+                @if (@ViewData["includeCancelledOrders"].ToString() == "true")
+                {
+                    @Html.DisplayFor(modelItem => item.CancelDate);
+                }
+            </td>
+
+            <td>
+                @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
+                @if (item.CancelDate == null)
+                {
+                    <a asp-action="Delete" asp-route-id="@item.Id">Cancel Order</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
